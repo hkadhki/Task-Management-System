@@ -1,0 +1,28 @@
+version: "3.1"
+
+volumes:
+  task_manager:
+
+services:
+  postgres:
+    image: postgres
+    container_name: "postgres"
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DATABASE=postgres
+
+
+  TaskManager:
+    image: task:latest
+    container_name: "task_manager"
+    build: .
+    ports:
+      - "8081:8081"
+    depends_on:
+      - postgres
+    environment:
+      SPRING_DATASOURCE_URL: 'jdbc:postgresql://postgres:5432/postgres'
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: 'org.hibernate.dialect.PostgreSQLDialect'
